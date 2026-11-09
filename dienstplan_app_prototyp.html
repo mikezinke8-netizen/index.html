@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dienstplan-App – klickbarer Prototyp</title>
+<style>
+:root{--navy:#17365d;--blue:#2563eb;--bg:#f3f6fb;--line:#dbe3ef;--text:#172033;--muted:#64748b;--green:#dcfce7;--yellow:#fef3c7;--red:#fee2e2;--purple:#ede9fe}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,-apple-system,Segoe UI,Arial;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:white;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header strong{font-size:19px}header small{opacity:.85}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 66px)}
+nav{background:white;border-right:1px solid var(--line);padding:16px}
+nav button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:12px;border-radius:9px;margin:3px 0;color:var(--text);cursor:pointer;font-size:15px}
+nav button.active,nav button:hover{background:#eaf1ff;color:var(--navy);font-weight:650}
+main{padding:24px;max-width:1300px;width:100%;margin:auto}
+h1{font-size:25px;margin:0 0 5px}h2{font-size:18px;margin:0 0 12px}.muted{color:var(--muted)}
+.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 2px 8px #0f172a08}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
+button,.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:white;cursor:pointer;font-weight:600}
+button.secondary{background:#e8eef8;color:var(--navy)}button:disabled{opacity:.45;cursor:not-allowed}
+select,input,textarea{border:1px solid #cbd5e1;border-radius:8px;padding:10px;font:inherit;background:white}
+table{width:100%;border-collapse:separate;border-spacing:4px;min-width:760px}th{background:#edf2f8;padding:10px;text-align:center;border-radius:7px}td{padding:8px;background:#f8fafc;border-radius:7px;vertical-align:top;min-width:105px}td:first-child{font-weight:650;min-width:130px;background:#eef2f7}
+.roster-wrap{overflow:auto}.tag{display:inline-block;padding:4px 7px;border-radius:6px;font-size:12px;margin:2px 2px 2px 0;background:#e2e8f0}
+.t-work{background:#dbeafe}.t-vac{background:var(--yellow)}.t-sick{background:var(--red)}.t-17{background:#fecaca;font-weight:700}.t-other{background:var(--purple)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.card{border:1px solid var(--line);padding:15px;border-radius:12px;background:#fff}
+.card strong{display:block;font-size:21px;margin:4px 0}.notice{background:#eff6ff;border-left:4px solid var(--blue);padding:12px;border-radius:7px;margin:12px 0}
+.status{font-weight:650}.success{color:#15803d}.warning{color:#a16207}
+.hidden{display:none}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px}
+ul{padding-left:20px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+footer{color:var(--muted);font-size:12px;padding:10px 0}
+@media(max-width:720px){.layout{display:block}nav{display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}nav button{white-space:nowrap;width:auto;margin:0 3px;padding:10px}main{padding:15px}header{padding:13px 15px}}
+</style>
+</head>
+<body>
+<header><div><strong>📅 Dienstplan</strong><br><small>Interner App-Prototyp · Beispieldaten</small></div><div><small>Angemeldet als: Mitarbeiter 01 · Demo</small></div></header>
+<div class="layout">
+<nav aria-label="Hauptnavigation">
+<button class="active" data-page="home">🏠 Übersicht</button>
+<button data-page="roster">📅 Dienstplan</button>
+<button data-page="late">🕔 17-Uhr-Dienst</button>
+<button data-page="swap">🔄 Diensttausch</button>
+<button data-page="release">🏖️ Freistellung</button>
+<button data-page="sick">🤒 Krankmeldung</button>
+<button data-page="management">🔐 Leitung (Demo)</button>
+</nav>
+<main>
+<section id="home" class="page">
+<h1>Guten Tag!</h1><div class="muted">Hier ist deine persönliche Dienstplan-Übersicht.</div>
+<div class="cards">
+<div class="card">Aktuelle Kalenderwoche<strong>KW 45</strong><span class="muted">02.11.–06.11.2026</span></div>
+<div class="card">Deine Gruppe<strong>EPL7D</strong><span class="muted">Beispielzuordnung</span></div>
+<div class="card">Nächster 17-Uhr-Dienst<strong>2 Plätze frei</strong><span class="muted">Demo-Anzeige</span></div>
+</div>
+<div class="panel"><h2>Schnellzugriff</h2><div class="actions">
+<button onclick="show('roster')">Dienstplan öffnen</button><button class="secondary" onclick="show('late')">17-Uhr-Dienst ansehen</button><button class="secondary" onclick="show('sick')">Krankmeldung senden</button>
+</div></div>
+<div class="notice"><b>Prototyp-Hinweis:</b> Alle Namen, Gruppen und Dienste in dieser Demo sind Beispieldaten. Es werden keine Daten an die Firma oder an Outlook übertragen.</div>
+</section>
+
+<section id="roster" class="page hidden">
+<h1>Dienstplan</h1><div class="muted">Wochenansicht nach dem Aufbau der bereitgestellten Excel-Vorlage.</div>
+<div class="toolbar"><label>Gruppe <select id="groupFilter"><option>Alle Gruppen</option><option>EPL7D</option><option>EPL8D</option><option>EPL9D</option></select></label><label>Woche <select><option>KW 45 · 02.–06.11.2026</option><option>KW 46 · Beispieldaten</option></select></label><span class="muted">Demo: 8 von 45 Beschäftigten</span></div>
+<div class="panel roster-wrap"><table><thead><tr><th>Mitarbeiter</th><th>Montag<br>02.11.</th><th>Dienstag<br>03.11.</th><th>Mittwoch<br>04.11.</th><th>Donnerstag<br>05.11.</th><th>Freitag<br>06.11.</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
+<div><span class="tag t-work">Regeldienst</span><span class="tag t-vac">Urlaub / Gleittag</span><span class="tag t-sick">Krank</span><span class="tag t-17">17-Uhr-Dienst</span><span class="tag t-other">Sonstiger Einsatz</span></div>
+</section>
+
+<section id="late" class="page hidden">
+<h1>17-Uhr-Dienst übernehmen</h1><div class="muted">Pro Tag sind genau zwei Plätze vorgesehen.</div>
+<div class="panel"><div class="toolbar"><label>Datum <select id="lateDate"><option>Montag, 09.11.2026</option><option>Dienstag, 10.11.2026</option><option>Mittwoch, 11.11.2026</option></select></label></div>
+<div id="lateStatus" class="notice">Besetzung: 0 von 2 Plätzen belegt.</div><div id="lateNames" class="muted">Noch keine Anmeldungen.</div>
+<div class="actions"><button id="joinLate" onclick="joinLate()">Für diesen Dienst anmelden</button></div>
+<p class="muted">Die Demo verhindert eine dritte Anmeldung, sobald zwei Plätze belegt sind.</p></div>
+</section>
+
+<section id="swap" class="page hidden">
+<h1>Diensttausch</h1><div class="notice">Ein Tausch ist erst vollständig, wenn die Ersatzperson ausdrücklich zugestimmt hat. Die endgültige Freigaberegel durch die Leitung ist noch festzulegen.</div>
+<div class="panel"><div class="formgrid">
+<label class="field">Dein Dienst<input value="Mittwoch, 11.11.2026 · Regeldienst" readonly></label>
+<label class="field">Ersatzperson<select id="replacement"><option>Mitarbeiter 02</option><option>Mitarbeiter 03</option><option>Mitarbeiter 04</option></select></label>
+<label class="field">Tausch mit<input value="Donnerstag, 12.11.2026" readonly></label>
+</div><div class="actions"><button onclick="requestSwap()">Tauschanfrage senden</button></div><p id="swapMsg" class="status muted" aria-live="polite"></p></div>
+</section>
+
+<section id="release" class="page hidden">
+<h1>Freistellung beantragen</h1><div class="panel"><div class="formgrid">
+<label class="field">Datum<input type="date" value="2026-11-12"></label>
+<label class="field">Grund (optional)<select><option>Persönlicher Grund</option><option>Termin</option><option>Sonstiges</option></select></label>
+</div><label class="field" style="margin-top:12px">Nachricht an die Leitung<textarea rows="3" placeholder="Optionale Nachricht"></textarea></label>
+<div class="actions"><button onclick="message('releaseMsg','Antrag wurde in dieser Demo vorgemerkt. Es wurde keine echte Anfrage versendet.')">Antrag an Leitung senden</button></div><p id="releaseMsg" class="status muted" aria-live="polite"></p></div>
+</section>
+
+<section id="sick" class="page hidden">
+<h1>Krankmeldung</h1><div class="notice">Die Krankmeldung ist nur für die Leitung vorgesehen. Bitte keine Diagnose oder unnötigen Gesundheitsdetails eintragen.</div>
+<div class="panel"><div class="formgrid">
+<label class="field">Erster Krankheitstag<input type="date" value="2026-11-09"></label>
+<label class="field">Voraussichtlich zurück am (optional)<input type="date"></label>
+</div><div class="actions"><button onclick="message('sickMsg','Krankmeldung in der Demo erfasst. In der echten App würde ausschließlich die Leitung benachrichtigt.')">Krankmeldung an Leitung senden</button></div><p id="sickMsg" class="status muted" aria-live="polite"></p></div>
+</section>
+
+<section id="management" class="page hidden">
+<h1>Leitungsbereich</h1><div class="notice"><b>Nur Demo:</b> Diese Ansicht simuliert einen geschützten Bereich. In der echten App müssen die Zugriffsrechte technisch über Firmenkonten und SharePoint abgesichert werden.</div>
+<div class="cards"><div class="card">Offene Tauschanfragen<strong id="swapCount">1</strong><button class="secondary" onclick="message('manageMsg','Demo: Tauschanfrage zur Prüfung geöffnet.')">Prüfen</button></div><div class="card">Freistellungsanträge<strong>2</strong><button class="secondary" onclick="message('manageMsg','Demo: Freistellungsanträge geöffnet.')">Prüfen</button></div><div class="card">Krankmeldungen<strong>1</strong><button class="secondary" onclick="message('manageMsg','Demo: Geschützte Krankmeldungsübersicht geöffnet.')">Geschützt öffnen</button></div></div>
+<div class="panel"><h2>Regeln und offene technische Punkte</h2><ul><li>Genau zwei Plätze pro 17-Uhr-Dienst.</li><li>Krankmeldungen ausschließlich für die Leitung.</li><li>Bestätigter Ersatz bei Diensttausch erforderlich.</li><li>Ob die Leitung einen bestätigten Tausch zusätzlich genehmigen muss, ist noch zu entscheiden.</li><li>SharePoint als zentrale Datenquelle; Excel-Synchronisierung muss von der IT eingerichtet und getestet werden.</li></ul><p id="manageMsg" class="status muted" aria-live="polite"></p></div>
+</section>
+<footer>Interaktiver Klick-Prototyp · keine echte Anmeldung, Speicherung, E-Mail, Push-Nachricht oder Verbindung zum Firmenlaufwerk.</footer>
+</main></div>
+<script>
+const people=[
+{name:"Mitarbeiter 01",group:"EPL7D",days:["EPL Clearing","EPL Clearing","EPL Clearing","EPL Clearing","EPL Clearing"]},
+{name:"Mitarbeiter 02",group:"EPL7D",days:["Urlaub / Gleittag","Urlaub / Gleittag","Urlaub / Gleittag","EPL Clearing","EPL Clearing"]},
+{name:"Mitarbeiter 03",group:"EPL8D",days:["EPL Clearing","EPL Clearing","EPL Clearing","EPL Clearing","EPL Clearing"]},
+{name:"Mitarbeiter 04",group:"EPL8D",days:["Krank","Krank","Krank","Krank","Krank"]},
+{name:"Mitarbeiter 05",group:"EPL9D",days:["Paketvers. / BD","Paketvers. / BD","Paketvers. / BD","Paketvers. / BD","Paketvers. / BD"]},
+{name:"Mitarbeiter 06",group:"EPL9D",days:["EPL Clearing","Hauspostanlage","Hauspostanlage","EPL Clearing","EPL Clearing"]},
+{name:"Mitarbeiter 07",group:"EPL7D",days:["EPL Clearing","EPL Clearing","Urlaub / Gleittag","EPL Clearing","EPL Clearing"]},
+{name:"Mitarbeiter 08",group:"EPL8D",days:["Sonstiger Einsatz","Sonstiger Einsatz","EPL Clearing","EPL Clearing","EPL Clearing"]}
+];
+function renderRoster(){let f=document.getElementById('groupFilter').value;document.getElementById('rosterRows').innerHTML=people.filter(p=>f==="Alle Gruppen"||p.group===f).map(p=>`<tr><td>${p.name}<br><small class="muted">${p.group}</small></td>${p.days.map(d=>`<td><span class="tag ${d.includes('Urlaub')?'t-vac':d==='Krank'?'t-sick':d.includes('Sonstiger')||d.includes('Hauspost')?'t-other':'t-work'}">${d}</span></td>`).join('')}</tr>`).join('')}
+document.getElementById('groupFilter').addEventListener('change',renderRoster);renderRoster();
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.page)));
+let lateSignups=[];
+function updateLate(){let n=lateSignups.length;document.getElementById('lateStatus').textContent=`Besetzung: ${n} von 2 Plätzen belegt.`;document.getElementById('lateNames').textContent=n?`Angemeldet: ${lateSignups.join(', ')}`:'Noch keine Anmeldungen.';document.getElementById('joinLate').disabled=n>=2||lateSignups.includes('Mitarbeiter 01');if(n>=2)document.getElementById('lateStatus').textContent+=' Der Dienst ist voll belegt.'}
+function joinLate(){if(lateSignups.length<2&&!lateSignups.includes('Mitarbeiter 01'))lateSignups.push('Mitarbeiter 01');updateLate()}updateLate();
+function message(id,t){let el=document.getElementById(id);el.textContent=t;el.className='status success'}
+function requestSwap(){message('swapMsg',`Anfrage an ${document.getElementById('replacement').value} gesendet (Demo). Der Tausch gilt erst nach ausdrücklicher Bestätigung.`)}
+</script>
+</body></html>
